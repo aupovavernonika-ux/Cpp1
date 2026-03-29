@@ -6,7 +6,7 @@
 using namespace std;
 const int SIZE = 10;
 int main() {
-	setlocale(LC_ALL, "");
+	setlocale(LC_ALL, "RU");
 	int nums[SIZE];
 	int a, b, t;
 	for (t = 0; t < SIZE; t++) nums[t] = rand();
@@ -54,35 +54,56 @@ int main() {
 }
 
 //2) Написать программу, которая проверяет, является ли введенная с
-//клавиатуры строка шестнадцатеричным числом.
+//клавиатуры строка шестнадцатеричным числом (включая отрицательные).
 #include <iostream>
 #include <string>
 using namespace std;
+
 int main() {
-	setlocale(LC_ALL, "");
+	setlocale(LC_ALL, "RU");
 	string str;
-	cout << "Введите строку: ";
+	cout << "Введите строку без пробелов: ";
 	getline(cin, str);
+
 	if (str.empty()) {
 		cout << "Ошибка: введена пустая строка." << endl;
-		return 0; 
+		return 0;
 	}
-	bool isHex = true;
-	for (int i = 0; i < str.length(); i++) {
-		if (!((str[i] >= '0' && str[i] <= '9') ||
-			(str[i] >= 'A' && str[i] <= 'F') ||
-			(str[i] >= 'a' && str[i] <= 'f'))) {
+
+	bool isHex = true;      
+	bool hasNonZero = false; 
+	int start = 0;           
+	bool negative = false;   
+
+	if (str[0] == '-') {
+		negative = true;
+		start = 1; 
+		if (str.length() == 1) {
 			isHex = false;
-			break;
 		}
 	}
-	if (isHex && !str.empty()) {
-		cout << "Строка \"" << str << "\" является шестнадцатеричным числом." << endl;
+
+	for (int i = start; i < str.length(); i++) {
+		char c = str[i];
+		if (!((c >= '0' && c <= '9') ||
+			(c >= 'A' && c <= 'F') ||
+			(c >= 'a' && c <= 'f'))) {
+			isHex = false;
+			break;           
+		}
+		
+		if (c != '0') {
+			hasNonZero = true;
+		}
 	}
-	else {
+	if (negative && !hasNonZero) {
+		isHex = false;
+	}
+
+	if (isHex && !str.empty())
+		cout << "Строка \"" << str << "\" является шестнадцатеричным числом.";
+	else
 		cout << "Строка \"" << str << "\" не является шестнадцатеричным числом." << endl;
-		cout << "Шестнадцатеричное число может содержать только цифры 0-9 и буквы A-F (a-f)." << endl;
-	}
 	return 0;
 }
 
